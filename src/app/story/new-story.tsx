@@ -389,7 +389,7 @@ const CodeBlock = ({handleSave}:{handleSave:()=>void}) => {
   }, [language, code, highlightedCode]);
   return (
     <div className="w-full">
-      <div className="prose w-full relative bg-gray-50 rounded-sm p-5 focus:outline-none">
+      <div className=" w-full relative bg-gray-50 rounded-sm p-5 focus:outline-none">
         <div>
           <select
             contentEditable={false}

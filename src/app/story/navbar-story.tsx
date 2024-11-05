@@ -6,27 +6,39 @@ import Image from "next/image";
 import Link from "next/link";
 import ProfileModal from "@/components/profile-model";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-type Props = {};
+type Props = {
+  storyId: string;
+  currentUserId: string;
+  currentUserFirstName: string | null;
+  currentUserLastName: string | null;
+};
 
-const NavbarStory = (props: Props) => {
+const NavbarStory = ({ storyId, currentUserId, currentUserFirstName, currentUserLastName }: Props) => {
   const { data: session } = useSession();
-  // console.log(session?.user)
   const router = useRouter();
-  const MakeNewStory = async () => {
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+
+  const PublishedStory = async (topics:string[]) => {
     try {
-      const response = await fetch("/api/new-story", {
-        method: "POST",
+      const response = await fetch('/api/publish-new-story',{
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-      });
-      const data = await response.json();
-      router.push(`/story/${data.id}`);
+        body: JSON.stringify({
+          storyId: storyId,
+          topics: topics
+        })
+      })
+      const data = await response.json()
+      router.push(`/published/${data.id}`)
     } catch (error) {
-      console.log("error creating new Story");
+      console.error("Error publishing new Story", error)
     }
-  };
+  }
+
   return (
     <div className="px-8 py-2 border-b-[1px]">
       <div className="flex items-center justify-between">
@@ -58,6 +70,11 @@ const NavbarStory = (props: Props) => {
           )}
         </div>
       </div>
+      {
+        showPopup && (
+          <SaveStoryPopup storyId={storyId} PublishStory={PublishStory} setShowPopUp={setShowPopup} CurrentUserFirstName={CurrentUserFirstName} CurrentUserLastName={CurrentUserLastName} CurrentUserId={CurrentUserId}/>
+        )
+      }
     </div>
   );
 };
