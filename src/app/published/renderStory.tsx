@@ -43,7 +43,7 @@ const RenderStory = async({
                     <p className='opacity-60'>Published on {new Date(PublishedStory.updatedAt).toDateString().split(' ').slice(1,4).join(' ')}</p>
                 </div>
             </div>
-            <div className="border-y-[1px] border-neutral-200 py-3 mt-6 flex items-center justify-center px-3">
+            <div className="border-y-[1px] border-neutral-200 py-3 mt-6 flex items-center justify-between px-3">
                 <div className="flex items-center space-x-4">
                     <ClapComponent storyId={PublishedStory.id} clapCount={clapCount} userClaps={userClaps} />
                     <CommentComponent />
