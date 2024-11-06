@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 export default async function Home() {
   const session = await auth();
   const user = session?.user;
-  const cookees = cookies().get("authjs.session-token");
+  // const cookees = cookies().get("authjs.session-token");
   // console.log(
   //   await decode({
   //     token: cookees?.value!,
@@ -14,6 +14,7 @@ export default async function Home() {
   //     secret: process.env.AUTH_SECRET!,
   //   })
   // );
+  // console.log(user)
   return (
     <main>
       <Navbar />
