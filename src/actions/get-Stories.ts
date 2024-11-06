@@ -18,3 +18,21 @@ export async function getStoryById(storyId: string) {
     return { error: "Error on getting the story by Id" };
   }
 }
+
+export async function getPublishedStoryById(storyId: string) {
+  if (!storyId) {
+    throw new Error("No storyId provided");
+  }
+  try {
+    const StoryById = await prisma.story.findUnique({
+      where: {
+        id: storyId,
+        publish: true,
+      },
+    });
+
+    return { response: StoryById };
+  } catch (error) {
+    return { error: "Error on getting the story by Id" };
+  }
+}

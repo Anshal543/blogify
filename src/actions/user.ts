@@ -17,3 +17,11 @@ export const getCurrentUser = async () =>{
     }
     return session?.user
 }
+
+export const getUser = async (userId:string) =>{
+    const session = await getSession()
+    if(!session?.user){
+        throw new Error("No user is signed in")
+    }
+    return session?.user
+}
