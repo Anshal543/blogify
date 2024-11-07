@@ -19,7 +19,8 @@ const CommentComponent = ({
   const [showSideComp, setShowSideComp] = useState<boolean>(false);
   const [content, setContent] = useState<string>();
   const pathname = usePathname();
-  const storyId = pathname.split("/")?.[2] as string;
+  const storyId = pathname.split( "/")?.[2] as string;
+  const [comments, setComments] = useState<Comments[]>([]);
   const CommentStory = async () => {
     try {
       await fetch("/api/comment-story", {
@@ -38,6 +39,20 @@ const CommentComponent = ({
       console.log("Error while commenting on story", error);
     }
   };
+  
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const result = await getAllComments(storyId);
+        if (result && result.response) {
+          setComments(result.response);
+        }
+      } catch (error) {
+        console.log("Error while fetching comments", error);
+      }
+    };
+    fetchComments();
+  }, []);
   return (
     <div>
       <button
@@ -47,7 +62,7 @@ const CommentComponent = ({
         <svg width="24" height="24" viewBox="0 0 24 24" className="ku">
           <path d="M18 16.8a7.14 7.14 0 0 0 2.24-5.32c0-4.12-3.53-7.48-8.05-7.48C7.67 4 4 7.36 4 11.48c0 4.13 3.67 7.48 8.2 7.48a8.9 8.9 0 0 0 2.38-.32c.23.2.48.39.75.56 1.06.69 2.2 1.04 3.4 1.04.22 0 .4-.11.48-.29a.5.5 0 0 0-.04-.52 6.4 6.4 0 0 1-1.16-2.65v.02zm-3.12 1.06l-.06-.22-.32.1a8 8 0 0 1-2.3.33c-4.03 0-7.3-2.96-7.3-6.59S8.17 4.9 12.2 4.9c4 0 7.1 2.96 7.1 6.6 0 1.8-.6 3.47-2.02 4.72l-.2.16v.26l.02.3a6.74 6.74 0 0 0 .88 2.4 5.27 5.27 0 0 1-2.17-.86c-.28-.17-.72-.38-.94-.59l.01-.02z"></path>
         </svg>
-        <p className="text-sm">{3}</p>
+        <p className="text-sm">{comments.length}</p>
       </button>
       <div
         className={`h-screen fixed top-0 right-0 w-[400px] shadow-xl bg-white z-20 duration-200 ease-linear transform overflow-y-scroll ${
@@ -55,7 +70,7 @@ const CommentComponent = ({
         }`}
       >
         <div className="px-6 pt-6 flex items-center justify-between">
-          <p className="font-medium">Response {83}</p>
+          <p className="font-medium">Response ({comments.length})</p>
           <span
             className="cursor-pointer opacity-60 scale-150"
             onClick={() => setShowSideComp(false)}
@@ -90,6 +105,7 @@ const CommentComponent = ({
             </div>
           </div>
         </div>
+        <RenderComments storyId={storyId}  />
       </div>
     </div>
   );
@@ -99,7 +115,7 @@ export default CommentComponent;
 
 interface Comments extends Comment {
   replies: Comment[];
-  clap: Clap[];
+  Clap: Clap[];
 }
 
 const RenderComments = ({
@@ -107,19 +123,15 @@ const RenderComments = ({
   parentCommentId,
 }: {
   storyId: string;
-  parentCommentId: string;
+  parentCommentId?: string;
 }) => {
   const [comments, setComments] = useState<Comments[]>([]);
   useEffect(() => {
     const fetchComments = async () => {
       try {
         const result = await getAllComments(storyId, parentCommentId);
-        if(result && result.response){
-          const commentsWithClap: Comments[] = result.response.map((comment: any) => ({
-            ...comment,
-            clap: comment.Clap,
-          }));
-          setComments(commentsWithClap);
+        if (result && result.response) {
+          setComments(result.response);
         }
       } catch (error) {
         console.log("Error while fetching comments", error);
@@ -129,7 +141,14 @@ const RenderComments = ({
   }, []);
   return (
     <div className="mt-10 border-t-[1px]">
-      
+      {comments.map((comment, index) => {
+        const clapCounts = comment.Clap.map((clap) => clap.clapCount).reduce((a, b) => a + b, 0);
+        return (
+        <div key={index} className='m-4 mt-5 py-4 border-b-[1px] border-neutral-100'>
+          {comment.content}
+        </div>
+        )
+      })}
     </div>
-  )
+  );
 };
