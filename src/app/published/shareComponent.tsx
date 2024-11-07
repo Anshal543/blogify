@@ -4,7 +4,7 @@ type Props = {}
 
 const ShareComponent = (props: Props) => {
   return (
-    <div>ShareComponent</div>
+    <div>0</div>
   )
 }
 
