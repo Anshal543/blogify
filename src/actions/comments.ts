@@ -35,3 +35,17 @@ export async function getAllComments(
     console.log("Error in fetching comments", error);
   }
 }
+
+export const NumberOfComments = async (storyId: string) => {
+  try {
+    const commentNo = await prisma.comment.aggregate({
+      where: {
+        storyId,
+      },
+      _count: true,
+    })
+    return {response:commentNo._count};
+  } catch (error) {
+    return {error:"error in fetching total  comments"}
+  }
+}

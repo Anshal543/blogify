@@ -1,4 +1,4 @@
-
+"use server"
 import {prisma} from '@/lib/db';
 import { getCurrentUserId } from './user';
 
@@ -64,7 +64,6 @@ export const ClapCountByUser = async (storyId:string, commentId?:string) => {
                 clapCount:true
             }
         })
-
         return  JSON.parse(JSON.stringify(Clap._sum?.clapCount || 0)) ;
     } catch (error) {
         return 0

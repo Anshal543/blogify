@@ -14,13 +14,10 @@ const ClapComponent = ({ storyId, clapCount, commentId, userClaps }: Props) => {
   const [showPopup, setShowPopUp] = useState<boolean>(false);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowPopUp(false);
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [showPopup]);
+    setCurrentClapByUser(userClaps)
+    setCurrentClaps(clapCount)
+},[userClaps, clapCount])
+
 
   const clapStoryOrComment = async () => {
     if (currentClapByUser >= 50) {
@@ -34,7 +31,7 @@ const ClapComponent = ({ storyId, clapCount, commentId, userClaps }: Props) => {
       if (!commentId) {
         await fetch(`/api/clap`, {
           method: "POST",
-          body: JSON.stringify({storyId}),
+          body: JSON.stringify({ storyId }),
         });
       } else {
         await fetch(`/api/clap-component`, {
@@ -45,11 +42,18 @@ const ClapComponent = ({ storyId, clapCount, commentId, userClaps }: Props) => {
       console.log("success");
     } catch (error) {
       console.log("error while clapping story or comment", error);
-      setCurrentClaps((prev) => prev + 1);
-      setCurrentClapByUser((prev) => prev + 1);
+      setCurrentClaps((prev) => prev - 1);
+      setCurrentClapByUser((prev) => prev - 1);
     }
   };
-
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowPopUp(false);
+    }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [showPopup]);
   return (
     <button onClick={clapStoryOrComment} className="flex items-center relative">
       <span
