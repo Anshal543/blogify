@@ -37,7 +37,7 @@ const ClapComponent = ({ storyId, clapCount, commentId, userClaps }: Props) => {
           body: JSON.stringify({storyId}),
         });
       } else {
-        await fetch(`/api/clap`, {
+        await fetch(`/api/clap-component`, {
           method: "POST",
           body: JSON.stringify({ storyId, commentId }),
         });

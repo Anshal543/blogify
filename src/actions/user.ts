@@ -1,3 +1,4 @@
+"use server"
 import { auth } from "@/auth";
 import { getSession } from "@/lib/get-session";
 
@@ -23,5 +24,6 @@ export const getUser = async (userId:string) =>{
     if(!session?.user){
         throw new Error("No user is signed in")
     }
+    // JSON.parse(JSON.stringify(session?.user))
     return session?.user
 }

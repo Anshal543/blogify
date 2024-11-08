@@ -26,7 +26,8 @@
     "react-dom": "^18",
     "react-select": "^5.8.2",
     "tailwind-merge": "^2.5.3",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "timeago.js": "^4.0.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
