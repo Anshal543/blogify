@@ -9,6 +9,7 @@ import ShareComponent from "./shareComponent";
 import { ClapCount, ClapCountByUser } from "@/actions/clap";
 import { getCurrentUser } from "@/actions/user";
 import { NumberOfComments } from "@/actions/comments";
+import { checkedSaved } from "@/actions/save";
 
 type Props = {
   AuthorFirstName: string | null;
@@ -33,6 +34,7 @@ const RenderStory = async ({
   const userClaps = await ClapCountByUser(PublishedStory.id);
   const currentUser = await getCurrentUser();
   const NumberOfComment  = await NumberOfComments(PublishedStory.id);
+  const savedStatus = await checkedSaved(PublishedStory.id);
   return (
     <div className="flex items-center justify-center mt-6 max-w-[800px] mx-auto">
       <div>
@@ -78,7 +80,7 @@ const RenderStory = async ({
             />
           </div>
           <div className="flex items-center space-x-4">
-            <SaveComponent />
+            <SaveComponent storyId={PublishedStory.id} savedStatus={savedStatus} />
             <ShareComponent />
             <button>
               <MoreHorizontal size={24} className="opacity-80 text-green-800" />
